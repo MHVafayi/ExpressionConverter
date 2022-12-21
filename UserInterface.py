@@ -14,7 +14,7 @@ class UserInterface:
         self.master = tk.Tk()
         self.master.eval('tk::PlaceWindow . center')
         self.master.title("Expressions Converter")
-        self.master.geometry("800x350")
+        self.master.geometry("850x400")
         self.master.configure(bg="#192841")
         self.converter()
         self.master.mainloop()
@@ -35,7 +35,7 @@ class UserInterface:
             if inputt.get().strip() == "":
                 self.is_tree_enabled = False
                 return
-            self.expression = inputt.get()
+            self.expression = inputt.get().strip()
             if int(option.get()) == 2:
                 self.postfix_str = self.EC.infix_to_postfix(inputt.get())
                 self.prefix_str = self.EC.infix_to_prefix(inputt.get())
@@ -153,17 +153,22 @@ class UserInterface:
         self.clear_master()
         self.menu()
         bt_node = self.binary_tree()
-        frame = tk.Frame(self.master, bg="#192841")
-        frame.grid(row=4, column=1, ipadx=150)
+        # frame = tk.Frame(self.master, bg="#192841")
+        # frame.grid(row=4, column=1, ipadx=150)
         MAX_HEIGHT = (bt_node.height + 1) * 50
         MAX_WIDTH = (2 ** (bt_node.height + 1)) * 50
-        canvas = tk.Canvas(frame, height=MAX_HEIGHT, width=MAX_WIDTH, bg="#192841")
-        canvas.pack(side="top", fill=tk.BOTH)
-        s = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
-        s.pack(side=tk.BOTTOM, fill=tk.X)
-        s.config(command=canvas.xview)
-        s.set(0,MAX_WIDTH)
-        canvas.config(xscrollcommand=s.set)
+        canvas = tk.Canvas(self.master, height=300, width=700, bg="#192841", scrollregion=(0,0,MAX_WIDTH,MAX_HEIGHT))
+        canvas.grid(row=4, column=1)
+        scroll_bar_x = tk.Scrollbar(self.master, orient=tk.HORIZONTAL)
+        scroll_bar_x.grid(row=5, column=1, sticky="nswe")
+        scroll_bar_x.config(command=canvas.xview)
+        scroll_bar_x.set(0,MAX_WIDTH)
+        scroll_bar_y = tk.Scrollbar(self.master, orient=tk.VERTICAL)
+        scroll_bar_y.grid(row=4, column=2, sticky="nswe")
+        scroll_bar_y.config(command=canvas.yview)
+        scroll_bar_y.set(0, MAX_HEIGHT)
+        canvas.config(xscrollcommand=scroll_bar_x.set)
+        canvas.config(yscrollcommand=scroll_bar_y.set)
 
         def display_tree(node: bt.Node, min_height: int, max_width: int, chunk: int):
             canvas.create_oval(max_width / 2 - 10, min_height - 10, max_width / 2 + 10, min_height + 10, fill="white")
@@ -179,6 +184,6 @@ class UserInterface:
         if self.expression.strip() != "" and self.expression != "Expression: ":
             display_tree(bt_node, 20, MAX_WIDTH, MAX_WIDTH/2)
         else :
-            canvas.create_text(MAX_HEIGHT/2, MAX_WIDTH/2, text="Nothing to show!!")
+            canvas.create_text(MAX_HEIGHT/2, MAX_WIDTH/2, text="Nothing to show!!", fill="white")
 
-u = UserInterface()
+
