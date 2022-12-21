@@ -46,7 +46,6 @@ class Converter:
             elif char.isalnum():
                 self.stack.append(char)
             else:
-                # char is operator
                 operand1 = self.stack.pop()
                 operand2 = self.stack.pop()
                 self.stack.append(operand1 + operand2 + char)
