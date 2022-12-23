@@ -85,6 +85,8 @@ class Converter:
         return self.stack.pop()
 
     def is_second_operator_greater_or_equal(self, operator1: str, operator2: str):
+        if operator1 == "^" and operator2 == "^":
+            return False
         priority1 = self.priorities.get(operator1)
         if not isinstance(priority1, int):
             priority1 = 0
